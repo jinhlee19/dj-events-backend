@@ -13,6 +13,15 @@ const { createCoreController } = require("@strapi/strapi").factories;
 /* --------- Add Custom Controller --------- */
 
 module.exports = createCoreController("api::event.event", ({ strapi }) => ({
+  // 로그인된 유저에게 글이 해당하지 않는 이슈 해결
+  // Create user event----------------------------------------
+  async create(ctx) {
+    let entity;
+    ctx.request.body.data.user = ctx.state.user.id;
+    entity = await super.create(ctx);
+    return entity;
+  },
+  //
   // Get logged in users
   async me(ctx) {
     const user = ctx.state.user;
